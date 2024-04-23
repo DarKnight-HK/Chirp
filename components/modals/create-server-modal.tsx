@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 import {
   Dialog,
   DialogContent,
@@ -36,13 +36,9 @@ const formSchema = z.object({
   }),
 });
 
-export const InitialModal = () => {
-  //this fixes the hydration error
-  const [mounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
+export const CreateServerModal = () => {
+  const { isOpen, onClose, type } = useModal();
+  const isModalOpen = isOpen && type === "createServer";
   const router = useRouter();
 
   const form = useForm({
@@ -60,25 +56,27 @@ export const InitialModal = () => {
       await axios.post("/api/servers/", values);
       form.reset();
       router.refresh();
-      window.location.reload();
+      onClose();
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (!mounted) {
-    return null;
-  }
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
             Create a Server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Get started by giving your server a personality with a name and an
-            image. You can always change it later 😉
+            Give Your server a personality with a name and an image. You can
+            always change it later.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
