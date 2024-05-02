@@ -49,27 +49,32 @@ export const InviteModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white dark:bg-[#313338]  dark:text-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
             Invite Friends
           </DialogTitle>
         </DialogHeader>
         <div className="p-6">
-          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+          <Label className="uppercase text-xs font-bold  text-zinc-600 dark:text-zinc-400">
             Server Invite Link
           </Label>
           <div className="flex items-center mt-2 gap-x-2">
             <Input
               disabled={isLoading}
-              className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+              className="dark:bg-[#1E1F22] bg-zinc-100 border-0 focus-visible:ring-0 text-zinc-600 dark:text-zinc-300 focus-visible:ring-offset-0"
               value={inviteUrl}
             />
-            <Button disabled={isLoading} size="icon" onClick={onCopy}>
+            <Button
+              disabled={isLoading}
+              size="icon"
+              className="dark:bg-[#1E1F22] dark:hover:bg-[#1E1F22]/75"
+              onClick={onCopy}
+            >
               {copied ? (
-                <Copy className="size-4 animate-ping" />
+                <Copy className="size-4 animate-ping dark:text-zinc-300" />
               ) : (
-                <Copy className="w-4 h-4" />
+                <Copy className="w-4 h-4 dark:text-zinc-300" />
               )}
             </Button>
           </div>
@@ -78,7 +83,7 @@ export const InviteModal = () => {
             disabled={isLoading}
             variant="link"
             size="sm"
-            className=" text-xs text-zinc-500 mt-4"
+            className="text-xs dark:text-zinc-300 text-zinc-500 mt-4"
           >
             Generate a new link
             <RefreshCw className="size-4 ml-2" />

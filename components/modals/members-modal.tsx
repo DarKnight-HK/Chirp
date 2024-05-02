@@ -10,7 +10,7 @@ import {
   Loader2,
   MoreVertical,
   Shield,
-  ShieldAlert,
+  Crown,
   ShieldCheck,
   ShieldQuestion,
 } from "lucide-react";
@@ -39,7 +39,7 @@ import { useRouter } from "next/navigation";
 const roleIconMap = {
   GUEST: null,
   MODERATOR: <ShieldCheck className="size-4 ml-2 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="size-4 ml-2 text-rose-500" />,
+  ADMIN: <Crown className="size-4 ml-2 fill-amber-500 text-amber-500" />,
 };
 
 export const MembersModal = () => {
@@ -69,9 +69,28 @@ export const MembersModal = () => {
     }
   };
 
+  const onKick = async (memberId: string) => {
+    try {
+      setLoadingId(memberId);
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          serverId: server?.id,
+        },
+      });
+      const response = await axios.delete(url);
+      router.refresh();
+      onOpen("members", { server: response.data });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingId("");
+    }
+  };
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black overflow-hidden">
+      <DialogContent className="bg-white dark:bg-[#313338]  dark:text-white text-black overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
             Manage Members
@@ -81,7 +100,7 @@ export const MembersModal = () => {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="mt-8 max-h-[420px] pr-6">
-          {server?.members.map((member) => (
+          {server?.members?.map((member) => (
             <div key={member.id} className="flex items-center gap-x-2 mb-6">
               <UserAvatar src={member.profile.imageUrl} />
               <div className="flex flex-col gap-y-1">
@@ -133,7 +152,10 @@ export const MembersModal = () => {
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-rose-500 focus:text-white focus:bg-[#DA373C]">
+                          <DropdownMenuItem
+                            onClick={() => onKick(member.id)}
+                            className="text-rose-500 focus:text-white focus:bg-[#DA373C]"
+                          >
                             <Gavel className="size-4 mr-2" />
                             Kick
                           </DropdownMenuItem>

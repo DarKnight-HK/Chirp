@@ -12,7 +12,6 @@ import { useModal } from "@/hooks/use-modal-store";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogFooter,
   DialogTitle,
@@ -77,15 +76,11 @@ export const EditServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white dark:bg-[#313338]  dark:text-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
-            Create a Server
+            Edit Server
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500">
-            Get started by giving your server a personality with a name and an
-            image. You can always change it later 😉
-          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -112,13 +107,13 @@ export const EditServerModal = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark: text-secondary/70">
+                    <FormLabel className="uppercase text-xs font-bold  text-zinc-600 dark:text-zinc-400">
                       Server Name
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        className="dark:bg-[#1E1F22] bg-zinc-100 border-0 focus-visible:ring-0 text-zinc-600 dark:text-zinc-300 focus-visible:ring-offset-0"
                         placeholder="Enter Server Name"
                         {...field}
                       />
@@ -128,7 +123,15 @@ export const EditServerModal = () => {
                 )}
               />
             </div>
-            <DialogFooter className="bg-gray-100 px-6 py-4">
+            <DialogFooter className="dark:bg-[#2B2D31] bg-gray-100 px-6 py-4">
+              <Button
+                disabled={isLoading}
+                onClick={onClose}
+                className="hidden md:flex mr-auto"
+                variant="link"
+              >
+                Cancel
+              </Button>
               <Button disabled={isLoading} variant="primary">
                 Save
               </Button>
