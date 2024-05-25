@@ -8,7 +8,7 @@ import { UserAvatar } from "../user-avatar";
 
 interface Props {
   member: Member & { profile: Profile };
-  server: Server;
+  read: boolean;
 }
 const roleIconMap = {
   [MemberRole.GUEST]: null,
@@ -19,7 +19,7 @@ const roleIconMap = {
     <Crown className="size-4 ml-auto  fill-amber-500 text-amber-500" />
   ),
 };
-export const ServerMember = ({ member, server }: Props) => {
+export const ServerMember = ({ member, read }: Props) => {
   const params = useParams();
   const router = useRouter();
   const icon = roleIconMap[member.role];
@@ -34,10 +34,12 @@ export const ServerMember = ({ member, server }: Props) => {
         params?.memberId === member.id && "bg-zinc-700/20 dark:bg-zinc-700"
       )}
     >
+      {!read && <div className="size-2 rounded-full fill-red-500 bg-red-500" />}
       <UserAvatar
         src={member.profile.imageUrl}
         className="h-8 w-8 md:h-8 md:w-8"
       />
+
       <p
         className={cn(
           "font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition",

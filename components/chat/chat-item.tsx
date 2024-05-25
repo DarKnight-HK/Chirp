@@ -17,7 +17,12 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useModal } from "@/hooks/use-modal-store";
-import { useRouter, useParams, redirect } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { format } from "date-fns";
+
+import { UserCard } from "../user-card";
+import { AiChat } from "./ai-chat";
 interface Props {
   id: string;
   content: string;
@@ -43,6 +48,8 @@ const formSchema = z.object({
   content: z.string().min(1),
 });
 
+const DATE_FORMAT = "d MMM yyyy";
+
 export const ChatItem = ({
   id,
   content,
@@ -57,15 +64,17 @@ export const ChatItem = ({
 }: Props) => {
   const router = useRouter();
   const params = useParams();
+  const { onOpen, onClose, data } = useModal();
+  const { profile } = data;
   const onMemberClick = () => {
     if (member.id === currentMember.id) {
+      onOpen("editProfile", { profile });
       return;
     }
+    router.refresh();
     router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
   };
-
   const [isEditing, setIsEditing] = useState(false);
-  const { onOpen } = useModal();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -85,7 +94,7 @@ export const ChatItem = ({
     form.reset({
       content: content,
     });
-  }, [content]);
+  }, [content, form]);
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -113,6 +122,7 @@ export const ChatItem = ({
     (fileType === "mp4" && fileUrl) ||
     (content.startsWith("https://") && content.endsWith(".mp4"));
   const isYoutubeVideo = content.startsWith("https://www.youtube.com/watch?v=");
+  const isAi = content.startsWith("/ai ");
 
   const isImage =
     (!isPDF && !isVideo && fileUrl) ||
@@ -121,21 +131,56 @@ export const ChatItem = ({
   return (
     <div className="relative group flex items-center hover:bg-black/5 p-4 w-full transition">
       <div className="group flex gap-x-2 items-start w-full ">
-        <div
-          onClick={onMemberClick}
-          className="cursor-pointer hover:drop-shadow-md transition"
-        >
-          <UserAvatar src={member.profile.imageUrl} />
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div className="cursor-pointer hover:drop-shadow-md transition">
+              <UserAvatar src={member.profile.imageUrl} />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent side="right" className="h-[300px] w-[250px]">
+            <UserCard
+              name={member.profile.name}
+              imageUrl={member.profile.imageUrl}
+              bio={!!member.profile.bio ? member.profile.bio : ""}
+              createdAt={format(
+                new Date(member.profile.createdAt),
+                DATE_FORMAT
+              )}
+              onClick={onMemberClick}
+              label={
+                member.id !== currentMember.id ? "Message" : "Edit Profile"
+              }
+            />
+          </PopoverContent>
+        </Popover>
         <div className="flex flex-col w-full ">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p
-                onClick={onMemberClick}
-                className="font-semibold text-sm hover:underline cursor-pointer"
-              >
-                {member.profile.name}
-              </p>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <p className="font-semibold text-sm hover:underline cursor-pointer">
+                    {member.profile.name}
+                  </p>
+                </PopoverTrigger>
+                <PopoverContent side="right" className="h-[300px] w-[250px]">
+                  <UserCard
+                    name={member.profile.name}
+                    imageUrl={member.profile.imageUrl}
+                    bio={!!member.profile.bio ? member.profile.bio : ""}
+                    createdAt={format(
+                      new Date(member.profile.createdAt),
+                      DATE_FORMAT
+                    )}
+                    onClick={onMemberClick}
+                    label={
+                      member.id !== currentMember.id
+                        ? "Message"
+                        : "Edit Profile"
+                    }
+                  />
+                </PopoverContent>
+              </Popover>
+
               <ActionTooltip label={member.role}>
                 {roleIconMap[member.role]}
               </ActionTooltip>
@@ -192,13 +237,18 @@ export const ChatItem = ({
               width="320px"
             />
           )}
+          {isAi && (
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+              <AiChat messageId={id} />
+            </div>
+          )}
           {(isVideo || isImage || isYoutubeVideo) && content && (content = "")}
           {!fileUrl && !isEditing && (
             <p
               className={cn(
                 "text-sm text-zinc-600 dark:text-zinc-300",
                 deleted &&
-                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+                "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
               )}
             >
               {content}

@@ -46,6 +46,7 @@ export const ChatMessages = ({
   const queryKey = `chat:${chatId}`;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({ queryKey, apiUrl, paramKey, paramValue });
+
   useChatSocket({ queryKey, addKey, updateKey });
   useChatScroll({
     chatRef,

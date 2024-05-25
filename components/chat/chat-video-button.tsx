@@ -10,7 +10,7 @@ export const ChatVideoButton = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isVideo = searchParams?.get("video");
-  const Icon = isVideo ? Video : VideoOff;
+  const Icon = isVideo ? VideoOff : Video;
   const tooltipLabel = isVideo ? "End Video Call" : "Start Video Call";
   const onClick = () => {
     const url = qs.stringifyUrl(

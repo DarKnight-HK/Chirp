@@ -63,7 +63,7 @@ export async function PATCH(
     }
     const { searchParams } = new URL(req.url);
     const { name, type } = await req.json();
-    const serverId = searchParams.get("serverId");
+    const serverId = searchParams.get("profileId");
     if (!serverId) {
       return new NextResponse("Server ID missing", { status: 400 });
     }

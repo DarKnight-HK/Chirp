@@ -2,6 +2,7 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { DirectMessage } from "@prisma/client";
 import { NextResponse } from "next/server";
+
 const MESSAGE_BATCH = 10;
 export async function GET(req: Request) {
   try {
@@ -40,9 +41,44 @@ export async function GET(req: Request) {
     if (messages.length === MESSAGE_BATCH) {
       nextCursor = messages[MESSAGE_BATCH - 1].id;
     }
+
+
+    const updatedAt = await db.directMessage.findFirst({
+      where: {
+        conversationId,
+        read: false,
+        member: {
+          profileId: {
+            not: profile.id,
+          },
+        },
+      },
+      select: {
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+    const setRead = await db.directMessage.updateMany({
+      where: {
+        conversationId,
+        read: false,
+        member: {
+          profileId: {
+            not: profile.id,
+          },
+        },
+      },
+      data: {
+        read: true,
+        updatedAt: updatedAt?.updatedAt,
+      },
+    });
     return NextResponse.json({
       items: messages,
       nextCursor,
+      setRead,
     });
   } catch (error) {
     console.log("[DIRECT_MESSAGES_GET]", error);

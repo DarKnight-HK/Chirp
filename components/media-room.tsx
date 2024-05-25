@@ -13,10 +13,10 @@ interface Props {
   audio: boolean;
 }
 
-const { user } = useUser();
-const [token, setToken] = useState("");
-
 export const MediaRoom = ({ chatId, video, audio }: Props) => {
+  const { user } = useUser();
+  const [token, setToken] = useState("");
+
   useEffect(() => {
     if (!user?.firstName || !user?.lastName) return;
     const name = `${user.firstName} ${user.lastName}`;

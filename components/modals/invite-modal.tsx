@@ -4,8 +4,9 @@ import { useModal } from "@/hooks/use-modal-store";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Copy, RefreshCw } from "lucide-react";
+import { Copy, QrCode, RefreshCw } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
+import qrcode from "qrcode";
 import {
   Dialog,
   DialogContent,
@@ -76,6 +77,14 @@ export const InviteModal = () => {
               ) : (
                 <Copy className="w-4 h-4 dark:text-zinc-300" />
               )}
+            </Button>
+            <Button
+              disabled={isLoading}
+              size="icon"
+              className="dark:bg-[#1E1F22] dark:hover:bg-[#1E1F22]/75"
+              onClick={() => onOpen("qrCode", { server })}
+            >
+              <QrCode className="size-4 dark:text-zinc-300" />
             </Button>
           </div>
           <Button

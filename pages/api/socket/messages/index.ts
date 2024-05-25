@@ -3,6 +3,7 @@ import { NextApiRequest } from "next";
 import { NextApiResponseServerIO } from "@/types";
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
+import { GetAiResults } from "@/lib/aiResponse";
 
 export default async function handler(
   req: NextApiRequest,
@@ -85,6 +86,18 @@ export default async function handler(
         },
       },
     });
+
+    if (content.toLowerCase().startsWith("/ai ")) {
+      const result = await GetAiResults(
+        content.toLowerCase().replace("/ai ", "")
+      );
+      await db.aiResponse.create({
+        data: {
+          content: result,
+          MessageId: message.id,
+        },
+      });
+    }
 
     const channelKey = `chat:${channelId}:messages`;
 

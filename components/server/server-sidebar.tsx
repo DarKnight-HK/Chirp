@@ -4,32 +4,15 @@ import { ChannelType, MemberRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ServerHeader } from "./server-header";
 import { ScrollArea } from "../ui/scroll-area";
-import { ServerSearch } from "./server-search";
-import { Hash, Mic, Crown, ShieldCheck, Video, Settings } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { ServerMember } from "./server-member";
 import { UserBar } from "./user-bar";
+import { CheckRead } from "@/lib/checkRead";
 
 type Props = {
   serverId: string;
-};
-
-const iconMap = {
-  [ChannelType.TEXT]: <Hash className="mr-2 size-4" />,
-  [ChannelType.AUDIO]: <Mic className="mr-2 size-4" />,
-  [ChannelType.VIDEO]: <Video className="mr-2 size-4" />,
-};
-
-const roleIconMap = {
-  [MemberRole.GUEST]: null,
-  [MemberRole.MODERATOR]: (
-    <ShieldCheck className="size-4 mr-2 text-indigo-500" />
-  ),
-  [MemberRole.ADMIN]: (
-    <Crown className="size-4 mr-2  fill-amber-500 text-amber-500" />
-  ),
 };
 
 export const ServerSidebar = async ({ serverId }: Props) => {
@@ -76,53 +59,26 @@ export const ServerSidebar = async ({ serverId }: Props) => {
   const role = server?.members.find(
     (member) => member.profileId === profile.id
   )?.role;
+
+  const currentMember = await db.member.findFirst({
+    where: {
+      serverId: server.id,
+      profileId: profile.id,
+    },
+    include: {
+      profile: true,
+    },
+  });
+  if (!currentMember) {
+    return redirect("/");
+  }
+
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5] ">
       <ServerHeader server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
-        <div className="mt-2">
-          <ServerSearch
-            data={[
-              {
-                label: "Text Channels",
-                type: "channel",
-                data: textChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Voice Channels",
-                type: "channel",
-                data: audioChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Video Channels",
-                type: "channel",
-                data: videoChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Members",
-                type: "member",
-                data: members?.map((member) => ({
-                  id: member.id,
-                  name: member.profile.name,
-                  icon: roleIconMap[member.role],
-                  imageUrl: member.profile.imageUrl,
-                })),
-              },
-            ]}
-          />
-        </div>
+        <div className="mt-2"/>
+        
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {!!textChannels?.length && (
           <div className="mb-2">
@@ -193,8 +149,12 @@ export const ServerSidebar = async ({ serverId }: Props) => {
               server={server}
             />
             <div className="space-y-2">
-              {members.map((member) => (
-                <ServerMember key={member.id} member={member} server={server} />
+              {members.map(async (member) => (
+                <ServerMember
+                  key={member.id}
+                  member={member}
+                  read={await CheckRead(member.id, currentMember.id)}
+                />
               ))}
             </div>
           </div>

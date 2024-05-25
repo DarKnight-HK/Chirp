@@ -5,7 +5,7 @@ import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { redirectToSignIn } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
 const MemberIDPage = async ({ params, searchParams }: Props) => {
   const profile = await currentProfile();
   if (!profile) {
-    return redirectToSignIn();
+    return auth().redirectToSignIn();
   }
   const currentMember = await db.member.findFirst({
     where: {

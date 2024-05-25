@@ -63,7 +63,7 @@ export const ServerSearch = ({ data }: Props) => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:bg-zinc-700/50 transition"
+        className="group px-2 py-2 rounded-md flex items-center gap-x-2 md:w-[250px] w-[150px] dark:hover:bg-[#1E1F22]/10 dark:bg-[#1E1F22]/50 bg-[#E3E5E8]/50 hover:bg-[#E3E5E8]/40 transition"
       >
         <Search className="size-4 text-zinc-500 dark:text-zinc-400" />
         <p className="font-semibold text-sm text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition">

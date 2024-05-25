@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Channel, ChannelType, MemberRole, Server } from "@prisma/client";
-import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
+import { Edit, Hash, Mic, Trash, Video } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { ActionTooltip } from "../action-tooltip";
 import { ModalType, useModal } from "@/hooks/use-modal-store";
@@ -62,9 +62,6 @@ export const ServerChannel = ({ channel, server, role }: Props) => {
             />
           </ActionTooltip>
         </div>
-      )}
-      {channel.name === "general" && (
-        <Lock className="ml-auto size-4 text-zinc-500 dark:text-zinc-400" />
       )}
     </button>
   );

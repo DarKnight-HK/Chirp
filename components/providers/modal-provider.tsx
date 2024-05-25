@@ -14,6 +14,8 @@ import { DeleteChannelModal } from "../modals/delete-channel-modal";
 import { EditChannelModal } from "../modals/edit-channel-modal";
 import { MessageFileModal } from "../modals/message-file-modal";
 import { DeleteMessageModal } from "../modals/delete-message-modal ";
+import { EditProfileModal } from "../modals/edit-profile-modal";
+import { QRCodeModal } from "../modals/qr-code-modal";
 
 export const ModalProvider = () => {
   const [mounted, setIsMounted] = useState(false);
@@ -39,6 +41,8 @@ export const ModalProvider = () => {
       <EditChannelModal />
       <MessageFileModal />
       <DeleteMessageModal />
+      <EditProfileModal />
+      <QRCodeModal />
     </>
   );
 };

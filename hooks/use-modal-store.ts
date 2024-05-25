@@ -12,9 +12,11 @@ export type ModalType =
   | "editChannel"
   | "messageFile"
   | "deleteMessage"
-  | "userProfile";
+  | "editProfile"
+  | "qrCode";
 
 interface ModalData {
+  profile?: Profile;
   server?: Server;
   channel?: Channel;
   channelType?: ChannelType;
@@ -37,3 +39,5 @@ export const useModal = create<ModalStore>((set) => ({
   onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
   onClose: () => set({ type: null, isOpen: false }),
 }));
+
+
