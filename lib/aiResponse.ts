@@ -6,7 +6,7 @@ declare global {
 const groq =
   globalThis.groq ||
   new Groq({
-    apiKey: "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",
+    apiKey: process.env.GROQ_API_KEY,
     dangerouslyAllowBrowser: true,
   });
 if (process.env.NODE_ENV !== "production") {
