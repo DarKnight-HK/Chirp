@@ -186,7 +186,7 @@ export const ChatItem = ({
               </ActionTooltip>
             </div>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              {timeStamp}
+              {timeStamp + (isAi ? " (AI Generated)" : "")}
             </span>
           </div>
           {isImage && (
@@ -205,7 +205,7 @@ export const ChatItem = ({
             </a>
           )}
           {isPDF && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+            <div className="relative flex items-center overflow-auto p-2 mt-2 rounded-md bg-background/10">
               <FileIcon className="size-10 fill-indigo-200 stroke-indigo-400" />
               <a
                 href={fileUrl}
@@ -238,9 +238,7 @@ export const ChatItem = ({
             />
           )}
           {isAi && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md bg-[#DFE0E3] dark:bg-[#34353B]">
-              <AiChat messageId={id} />
-            </div>
+            <AiChat messageId={id} />
           )}
           {(isVideo || isImage || isYoutubeVideo) && content && (content = "")}
           {!fileUrl && !isEditing && (

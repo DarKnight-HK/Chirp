@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, QrCode, RefreshCw } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
-import qrcode from "qrcode";
 import {
   Dialog,
   DialogContent,
