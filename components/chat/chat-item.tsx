@@ -122,7 +122,7 @@ export const ChatItem = ({
     (fileType === "mp4" && fileUrl) ||
     (content.startsWith("https://") && content.endsWith(".mp4"));
   const isYoutubeVideo = content.startsWith("https://www.youtube.com/watch?v=");
-  const isAi = content.startsWith("/ai ");
+  const isAi = content.toLowerCase().startsWith("/ai ");
 
   const isImage =
     (!isPDF && !isVideo && fileUrl) ||
