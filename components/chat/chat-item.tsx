@@ -238,7 +238,7 @@ export const ChatItem = ({
             />
           )}
           {isAi && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-[#DFE0E3] dark:bg-[#34353B]">
               <AiChat messageId={id} />
             </div>
           )}
