@@ -32,7 +32,7 @@ NEXT_PUBLIC_LIVEKIT_URL=
 
 ### Setup Prisma
 
-Add MySQL Database (I used PlanetScale)
+Add an SQL database, I used postgreSQL
 
 ```shell
 npx prisma generate
