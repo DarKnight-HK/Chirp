@@ -238,7 +238,9 @@ export const ChatItem = ({
             />
           )}
           {isAi && (
-            <AiChat messageId={id} />
+            <div className="flex overflow-hidden flex-col">
+              <AiChat messageId={id} />
+            </div>
           )}
           {(isVideo || isImage || isYoutubeVideo) && content && (content = "")}
           {!fileUrl && !isEditing && (
